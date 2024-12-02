@@ -1,6 +1,7 @@
 package com.wirke.jobportal.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,8 +35,16 @@ public class UsersController {
     }
 
     @PostMapping("/register/new")
-    public String userRegistration(@Valid Users users){
+    public String userRegistration(@Valid Users users, Model model){
 
+        Optional<Users> optionalUsers = usersService.getUserByEmail(users.getEmail());
+        if (optionalUsers.isPresent()){
+            model.addAttribute("error", "Another account with this email already registered!");
+            List<UsersType> usersTypes = usersTypeService.getAll();
+            model.addAttribute("getAllTypes", usersTypes);
+            model.addAttribute("user", new Users());
+            return "register";
+        }
         //System.out.println("User:: "+users);
         usersService.addNew(users);
         return "dashboard";
