@@ -13,7 +13,7 @@ public class MvcConfig implements WebMvcConfigurer {
     private static final String UPLOAD_DIR = "photos";
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    public void addResourceHandlers(@SuppressWarnings("null") ResourceHandlerRegistry registry) {
         
         exposeDirectory(UPLOAD_DIR, registry);
     }
