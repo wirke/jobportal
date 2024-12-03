@@ -51,6 +51,8 @@ public class JobPostActivity {
 
     private String jobTitle;
 
+    public JobPostActivity(){}
+
     public JobPostActivity(Integer jobPostId, Users postedById, JobLocation jobLocation, JobCompany jobCompany,
             boolean isActive, boolean isSaved, @Length(max = 10000) String descriptionOfJob, String jobType,
             String salary, String remote, Date postedDate, String jobTitle) {
