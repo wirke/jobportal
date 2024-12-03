@@ -41,6 +41,8 @@ public class JobSeekerProfile {
                 mappedBy = "jobSeekerProfile")
     private List<Skills> skills;
 
+    public JobSeekerProfile(){}
+
     public JobSeekerProfile(int userAccountId, Users userId, String firstName, String lastName, String city,
             String state, String country, String workAuthorization, String employmentType, String resume,
             String profilePhoto, List<Skills> skills) {
