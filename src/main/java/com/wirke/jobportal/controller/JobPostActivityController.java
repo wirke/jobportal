@@ -39,11 +39,9 @@ public class JobPostActivityController {
             model.addAttribute("username", currentUsername);
         }
 
-        if (currentUserProfile != null) {
-            model.addAttribute("user", currentUserProfile);
-        } else {
-            model.addAttribute("user", null);
         }
+
+        model.addAttribute("user", currentUserProfile);
 
         return "dashboard";
     }
