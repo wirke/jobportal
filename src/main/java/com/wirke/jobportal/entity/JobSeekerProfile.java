@@ -160,6 +160,13 @@ public class JobSeekerProfile {
         this.skills = skills;
     }
 
+    public String getPhotosImagePath(){
+
+        if(profilePhoto == null || userAccountId == null) return null;
+
+        return "/photos/candidate/" + userAccountId + "/" + profilePhoto;
+    }
+
     @Override
     public String toString() {
         return "JobSeekerProfile [userAccountId=" + userAccountId + ", userId=" + userId + ", firstName=" + firstName
