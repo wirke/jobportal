@@ -26,11 +26,11 @@ public class JobPostActivity {
     private Users postedById;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "jobLocationId", referencedColumnName = "Id")
+    @JoinColumn(name = "jobLocationId", referencedColumnName = "id")
     private JobLocation jobLocationId;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "jobCompanyId", referencedColumnName = "Id")
+    @JoinColumn(name = "jobCompanyId", referencedColumnName = "id")
     private JobCompany jobCompanyId;
 
     @Transient
@@ -46,7 +46,7 @@ public class JobPostActivity {
     private String salary;
     private String remote;
 
-    @DateTimeFormat(pattern = "dd-MM-yyy")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date postedDate;
 
     private String jobTitle;
