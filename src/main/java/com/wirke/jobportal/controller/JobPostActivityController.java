@@ -1,9 +1,11 @@
 package com.wirke.jobportal.controller;
 
 import java.sql.Date;
+import java.util.List;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.wirke.jobportal.entity.JobPostActivity;
+import com.wirke.jobportal.entity.RecruiterProfile;
 import com.wirke.jobportal.entity.Users;
+import com.wirke.jobportal.entity.DTO.RecruiterJobsDto;
 import com.wirke.jobportal.services.JobPostActivityService;
 import com.wirke.jobportal.services.UsersService;
 
@@ -37,8 +41,16 @@ public class JobPostActivityController {
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUsername = authentication.getName();
             model.addAttribute("username", currentUsername);
-        }
 
+            if(authentication.getAuthorities()
+                .contains(new SimpleGrantedAuthority("Recruiter"))){
+
+                    List<RecruiterJobsDto> recruiterJobs = jobPostActivityService
+                        .getRecruiterJobs((((RecruiterProfile) currentUserProfile)
+                            .getUserAccountId()));
+
+                    model.addAttribute("jobPost", recruiterJobs);
+            }
         }
 
         model.addAttribute("user", currentUserProfile);
@@ -66,7 +78,7 @@ public class JobPostActivityController {
         jobPostActivity.setPostedDate(new Date(0));
         model.addAttribute("jobPostActivity", jobPostActivity);
 
-        JobPostActivity saved = jobPostActivityService.addNew(jobPostActivity);
+        jobPostActivityService.addNew(jobPostActivity);
         return "redirect:/dashboard/";
     }
 }
