@@ -73,6 +73,13 @@ public class JobSeekerProfileController {
         }
         return "job-seeker-profile";
     }
+
+    @ExceptionHandler(IOException.class)
+    public String handleIOException(IOException ex, Model model) {
+        model.addAttribute("error", "Operation failed: " + ex.getMessage());
+        return "error-page";
+    }
+
     @SuppressWarnings("null")
     @PostMapping("/addNew")
     public String addNew(JobSeekerProfile jobSeekerProfile,
