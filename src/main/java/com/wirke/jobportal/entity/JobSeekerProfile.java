@@ -34,6 +34,8 @@ public class JobSeekerProfile {
     private String resume;
 
     @Column(nullable=true, length = 64)
+    private String uploadDir;
+
     private String profilePhoto;
 
     @OneToMany(targetEntity = Skills.class, 
