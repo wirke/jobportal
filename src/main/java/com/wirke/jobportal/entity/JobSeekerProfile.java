@@ -1,5 +1,6 @@
 package com.wirke.jobportal.entity;
 
+import java.beans.Transient;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -162,6 +163,7 @@ public class JobSeekerProfile {
         this.skills = skills;
     }
 
+    @Transient
     public String getPhotosImagePath(){
 
         if(profilePhoto == null || userAccountId == null) return null;
