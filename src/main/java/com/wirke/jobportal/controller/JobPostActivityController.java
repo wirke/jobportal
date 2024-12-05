@@ -124,6 +124,10 @@ public class JobPostActivityController {
                             .getUserAccountId()));
 
                     model.addAttribute("jobPost", recruiterJobs);
+            } else {
+
+                List<JobSeekerApply> jobSeekerApplyList = jobSeekerApplyService
+                    .getCandidatesJobs((JobSeekerProfile) currentUserProfile);
             }
         }
 
