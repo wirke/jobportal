@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wirke.jobportal.repository.UsersRepository;
 import com.wirke.jobportal.services.JobSeekerProfileService;
+import com.wirke.jobportal.util.FileDownloadUtil;
 import com.wirke.jobportal.util.FileUploadUtil;
 import com.wirke.jobportal.entity.JobSeekerProfile;
 import com.wirke.jobportal.entity.Skills;
@@ -136,5 +143,44 @@ public class JobSeekerProfileController {
         }
 
         return "redirect:/dashboard/";
+    }
+
+    @GetMapping("/{id}")
+    public String candidateProfile(@PathVariable("id") int id, Model model){
+
+        Optional<JobSeekerProfile> seekerProfile = jobSeekerProfileService.getOne(id);
+        model.addAttribute("profile", seekerProfile.get());
+        return "job-seeker-profile";
+    }
+
+    @GetMapping("/downloadResume")
+    public ResponseEntity<?> downloadResume(
+            @RequestParam(value = "fileName") String fileName, 
+            @RequestParam(value = "userID") String userId) {
+    
+        if (fileName == null || fileName.isEmpty() || userId == null || userId.isEmpty()) {
+            return new ResponseEntity<>("Invalid parameters", HttpStatus.BAD_REQUEST);
+        }
+    
+        FileDownloadUtil fileDownloadUtil = new FileDownloadUtil();
+        Resource resource = null;
+    
+        try {
+            resource = fileDownloadUtil.getFileAsResource("photos/candidate/" + userId, fileName);
+        } catch (IOException ex) {
+            return new ResponseEntity<>("Error retrieving file: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    
+        if (resource == null || !resource.exists()) {
+            return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
+        }
+    
+        String contentType = "application/octet-stream";
+        String headerValue = "attachment; filename=\"" + resource.getFilename() + "\"";
+    
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
+                .body(resource);
     }
 }
