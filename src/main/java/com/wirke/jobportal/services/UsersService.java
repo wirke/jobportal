@@ -56,6 +56,10 @@ public class UsersService {
         return savedUser;
     }
 
+    public Optional<Users> getUserByEmail(String email){
+        return usersRepository.findByEmail(email);
+    }
+
     public Users findByEmail(String currentUsername){
         return usersRepository.findByEmail(currentUsername).orElseThrow(() ->
             new UsernameNotFoundException("User not found"));
