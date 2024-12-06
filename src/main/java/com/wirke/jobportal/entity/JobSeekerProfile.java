@@ -1,5 +1,6 @@
 package com.wirke.jobportal.entity;
 
+import java.beans.Transient;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -17,7 +18,7 @@ import jakarta.persistence.Table;
 public class JobSeekerProfile {
     
     @Id
-    private int userAccountId;
+    private Integer userAccountId;
 
     @OneToOne
     @MapsId
@@ -34,6 +35,8 @@ public class JobSeekerProfile {
     private String resume;
 
     @Column(nullable=true, length = 64)
+    private String uploadDir;
+
     private String profilePhoto;
 
     @OneToMany(targetEntity = Skills.class, 
@@ -43,7 +46,7 @@ public class JobSeekerProfile {
 
     public JobSeekerProfile(){}
 
-    public JobSeekerProfile(int userAccountId, Users userId, String firstName, String lastName, String city,
+    public JobSeekerProfile(Integer userAccountId, Users userId, String firstName, String lastName, String city,
             String state, String country, String workAuthorization, String employmentType, String resume,
             String profilePhoto, List<Skills> skills) {
         this.userAccountId = userAccountId;
@@ -64,11 +67,11 @@ public class JobSeekerProfile {
         this.userId = users;
     }
 
-    public int getUserAccountId() {
+    public Integer getUserAccountId() {
         return userAccountId;
     }
 
-    public void setUserAccountId(int userAccountId) {
+    public void setUserAccountId(Integer userAccountId) {
         this.userAccountId = userAccountId;
     }
 
@@ -160,11 +163,19 @@ public class JobSeekerProfile {
         this.skills = skills;
     }
 
+    @Transient
+    public String getPhotosImagePath(){
+
+        if(profilePhoto == null || userAccountId == null) return null;
+
+        return "/photos/candidate/" + userAccountId + "/" + profilePhoto;
+    }
+
     @Override
     public String toString() {
         return "JobSeekerProfile [userAccountId=" + userAccountId + ", userId=" + userId + ", firstName=" + firstName
                 + ", lastName=" + lastName + ", city=" + city + ", state=" + state + ", country=" + country
                 + ", workAuthorization=" + workAuthorization + ", employmentType=" + employmentType + ", resume="
-                + resume + ", profilePhoto=" + profilePhoto + ", skills=" + skills + "]";
+                + resume + ", profilePhoto=" + profilePhoto + "]";
     }
 }
