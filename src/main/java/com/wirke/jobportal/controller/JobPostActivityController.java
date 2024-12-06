@@ -20,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.wirke.jobportal.entity.JobPostActivity;
 import com.wirke.jobportal.entity.JobSeekerApply;
 import com.wirke.jobportal.entity.JobSeekerProfile;
+import com.wirke.jobportal.entity.JobSeekerSave;
 import com.wirke.jobportal.entity.RecruiterProfile;
 import com.wirke.jobportal.entity.Users;
 import com.wirke.jobportal.entity.DTO.RecruiterJobsDto;
 import com.wirke.jobportal.services.JobPostActivityService;
 import com.wirke.jobportal.services.JobSeekerApplyService;
+import com.wirke.jobportal.services.JobSeekerSaveService;
 import com.wirke.jobportal.services.UsersService;
 
 import org.springframework.util.StringUtils;
@@ -35,12 +37,16 @@ public class JobPostActivityController {
     private final UsersService usersService;
     private final JobPostActivityService jobPostActivityService;
     private final JobSeekerApplyService jobSeekerApplyService;
+    private final JobSeekerSaveService jobSeekerSaveService;
 
-    public JobPostActivityController(UsersService usersService, JobPostActivityService jobPostActivityService,
-            JobSeekerApplyService jobSeekerApplyService) {
+    public JobPostActivityController(UsersService usersService, 
+            JobPostActivityService jobPostActivityService,
+            JobSeekerApplyService jobSeekerApplyService,
+            JobSeekerSaveService jobSeekerSaveService) {
         this.usersService = usersService;
         this.jobPostActivityService = jobPostActivityService;
         this.jobSeekerApplyService = jobSeekerApplyService;
+        this.jobSeekerSaveService = jobSeekerSaveService;
     }
 
     @GetMapping("/dashboard/")
@@ -128,6 +134,59 @@ public class JobPostActivityController {
 
                 List<JobSeekerApply> jobSeekerApplyList = jobSeekerApplyService
                     .getCandidatesJobs((JobSeekerProfile) currentUserProfile);
+
+                List<JobSeekerSave> jobSeekerSaveList = jobSeekerSaveService
+                    .getCandidatesJob((JobSeekerProfile) currentUserProfile);
+
+                if (jobSeekerApplyList == null) {
+                    jobSeekerApplyList = List.of();
+                }
+
+                if (jobSeekerSaveList == null) {
+                    jobSeekerSaveList = List.of();
+                }
+
+                for (JobPostActivity jobActivity : jobPost){
+
+                    boolean exist = jobSeekerApplyList.stream().anyMatch(apply -> 
+                        Objects.equals(jobActivity.getJobPostId(), apply.getJob().getJobPostId()));
+                    boolean saved = jobSeekerSaveList.stream().anyMatch(save -> 
+                        Objects.equals(jobActivity.getJobPostId(), save.getJob().getJobPostId()));
+                        
+                    jobActivity.setIsActive(exist);
+                    jobActivity.setIsSaved(saved);
+
+                    for (JobSeekerApply jobSeekerApply : jobSeekerApplyList){
+                        
+                        if (Objects.equals(jobActivity.getJobPostId(), 
+                            jobSeekerApply.getJob().getJobPostId())){
+
+                                jobActivity.setIsActive(true);
+                                exist = true;
+                                break;
+                        }
+                    }
+
+                    for (JobSeekerSave jobSeekerSave : jobSeekerSaveList){
+
+                        if(Objects.equals(jobActivity. getJobPostId(), 
+                            jobSeekerSave.getJob().getJobPostId())){
+
+                                jobActivity.setIsSaved(true);
+                                saved = true;
+                                break;
+                        }
+                    }
+                    if (!exist){
+                        jobActivity.setIsActive(false);
+                    }
+
+                    if (!saved){
+                        jobActivity.setIsSaved(false);
+                    }
+
+                    model.addAttribute("jobPost", jobPost);
+                }
             }
         }
 
