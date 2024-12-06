@@ -60,3 +60,4 @@ replay_pid*
 jobportal/photos
 *.pdf
 *.jpg
+/bin/
