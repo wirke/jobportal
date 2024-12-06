@@ -12,7 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Transient;
 
 @Entity
 public class JobPostActivity {
@@ -33,10 +32,8 @@ public class JobPostActivity {
     @JoinColumn(name = "jobCompanyId", referencedColumnName = "id")
     private JobCompany jobCompanyId;
 
-    @Transient
     private boolean isActive;
 
-    @Transient
     private boolean isSaved;
 
     @Length(max = 10000)
@@ -102,19 +99,19 @@ public class JobPostActivity {
         this.jobCompanyId = jobCompanyId;
     }
 
-    public boolean isActive() {
+    public boolean getIsActive() {
         return isActive;
     }
 
-    public void setActive(boolean isActive) {
+    public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
 
-    public boolean isSaved() {
+    public boolean getIsSaved() {
         return isSaved;
     }
 
-    public void setSaved(boolean isSaved) {
+    public void setIsSaved(boolean isSaved) {
         this.isSaved = isSaved;
     }
 
