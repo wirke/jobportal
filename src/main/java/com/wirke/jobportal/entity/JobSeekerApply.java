@@ -16,7 +16,7 @@ import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"userId", "job"})
+    @UniqueConstraint(columnNames = {"user_id", "job"})
 })
 public class JobSeekerApply {
     
@@ -25,8 +25,8 @@ public class JobSeekerApply {
     private Integer id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "userId", referencedColumnName = "user_account)id")
-    private JobSeekerProfile jobSeekerProfile;
+    @JoinColumn(name = "user_id", referencedColumnName = "user_account_id")
+    private JobSeekerProfile userId;    
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "job", referencedColumnName = "jobPostId")
@@ -39,10 +39,10 @@ public class JobSeekerApply {
 
     public JobSeekerApply(){}
 
-    public JobSeekerApply(Integer id, JobSeekerProfile jobSeekerProfile, JobPostActivity job, Date applyDate,
+    public JobSeekerApply(Integer id, JobSeekerProfile userId, JobPostActivity job, Date applyDate,
             String coverLetter) {
         this.id = id;
-        this.jobSeekerProfile = jobSeekerProfile;
+        this.userId = userId;
         this.job = job;
         this.applyDate = applyDate;
         this.coverLetter = coverLetter;
@@ -56,12 +56,12 @@ public class JobSeekerApply {
         this.id = id;
     }
 
-    public JobSeekerProfile getJobSeekerProfile() {
-        return jobSeekerProfile;
+    public JobSeekerProfile getUserId() {
+        return userId;
     }
 
-    public void setJobSeekerProfile(JobSeekerProfile jobSeekerProfile) {
-        this.jobSeekerProfile = jobSeekerProfile;
+    public void setUserId(JobSeekerProfile userId) {
+        this.userId = userId;
     }
 
     public JobPostActivity getJob() {
@@ -90,7 +90,7 @@ public class JobSeekerApply {
 
     @Override
     public String toString() {
-        return "JobSeekerApply [id=" + id + ", jobSeekerProfile=" + jobSeekerProfile + ", job=" + job + ", applyDate="
+        return "JobSeekerApply [id=" + id + ", jobSeekerProfile=" + userId + ", job=" + job + ", applyDate="
                 + applyDate + ", coverLetter=" + coverLetter + "]";
     }
 }
